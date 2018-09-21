@@ -35,9 +35,10 @@ test1_2 = do
     assert $ (pow 9 2) == 81
     assert $ (pow 3 4) == 81
     assert $ (pow 2 64) == 4294967296 * 4294967296
-    putStrLn $ show $ pow 2 10000000
-    putStrLn (show (sin 0.78539816339))
-    putStrLn (show (cos 0.78539816339))
+    -- putStrLn $ show $ pow 2 10000000
+    putStrLn "sin"
+    putStrLn $ show $ sin $ pi / 4
+    putStrLn $ show $ cos $ pi / 4
     assert $ not $ isPrime 1
     assert $ isPrime 2
     assert $ isPrime 3

@@ -17,10 +17,10 @@ sin x = let
     component :: Integer -> Double
     component n | n >= 0 = (pow (-1) n) * (pow x (2 * n + 1)) / (fromIntegral (factor (2 * n + 1)))
     solve :: Integer -> Double
-    solve 0 = component 0
-    solve n | n > 0 = (component n) + (solve (n - 1))
+    eps = 1e-16
+    solve n = (\c -> if (abs(c) < eps) then c else c + solve (n + 1))(component n) 
     in
-    solve 10
+    solve 0
 
 -- косинус числа (формула Тейлора)
 cos :: Double -> Double
@@ -36,10 +36,10 @@ cos x = let
     component :: Integer -> Double
     component n | n >= 0 = (pow (-1) n) * (pow x (2 * n)) / (fromIntegral (factor (2 * n)))
     solve :: Integer -> Double
-    solve 0 = component 0
-    solve n | n > 0 = (component n) + (solve (n - 1))
+    eps = 1e-16
+    solve n = (\c -> if (abs(c) < eps) then c else c + solve (n + 1))(component n) 
     in
-    solve 10
+    solve 0
 
 -- наибольший общий делитель двух чисел
 gcd :: Integer -> Integer -> Integer
