@@ -32,6 +32,10 @@ test1_2 = do
     putStrLn "Test1-2"
     assert $ (pow (-1) 10) == 1
     assert $ (pow 3 3) == 27
+    assert $ (pow 9 2) == 81
+    assert $ (pow 3 4) == 81
+    assert $ (pow 2 64) == 4294967296 * 4294967296
+    putStrLn $ show $ pow 2 10000000
     putStrLn (show (sin 0.78539816339))
     putStrLn (show (cos 0.78539816339))
     assert $ not $ isPrime 1

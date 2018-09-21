@@ -63,7 +63,9 @@ isDateCorrect day month year = todo
 pow :: Integer -> Integer -> Integer
 pow x 0 = 1
 pow x 1 = x
-pow x y | y >= 2 = x * pow x (y - 1)
+pow x y | y >= 2 = case (y `div` 2, y `mod` 2)of
+        (n, 0) -> (\p -> p * p) $ pow x n
+        (n, 1) -> x * ((\p -> p * p) $ pow x n)
 
 -- является ли данное число простым?
 isPrime :: Integer -> Bool
