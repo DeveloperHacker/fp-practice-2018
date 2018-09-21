@@ -73,7 +73,7 @@ isPrime x | x > 1 = let
     step 1 = False
     step n | n > 1 = (x `mod` n == 0) || (step (n - 1))
     in
-    not (step (x - 1))
+    not (step (x `div` 2))
 
 type Point2D = (Double, Double)
 

@@ -5,6 +5,9 @@ import Task1_1 (Term(IntConstant, Variable))
 import Task1_1 (Term, (|+|), (|-|), (|*|), replaceVar, evaluate)
 import Task1_2 (sin, cos, pow, isPrime, gcd)
 
+assert False = error "assertion failed!"
+assert _     = putStr ""
+
 test1_1 = 
     let 
         expr1 = (Variable "a") |+| Variable "b" |*| Variable "c"
@@ -27,32 +30,33 @@ test1_1 =
 
 test1_2 = do
     putStrLn "Test1-2"
-    putStrLn (show (pow (-1) 10))
-    putStrLn (show (pow 3 3))
+    assert $ (pow (-1) 10) == 1
+    assert $ (pow 3 3) == 27
     putStrLn (show (sin 0.78539816339))
     putStrLn (show (cos 0.78539816339))
-    putStrLn (show (isPrime 1))
-    putStrLn (show (isPrime 2))
-    putStrLn (show (isPrime 3))
-    putStrLn (show (isPrime 4))
-    putStrLn (show (isPrime 5))
-    putStrLn (show (isPrime 6))
-    putStrLn (show (isPrime 7))
-    putStrLn (show (isPrime 8))
-    putStrLn (show (isPrime 9))
-    putStrLn (show (isPrime 10))
-    putStrLn (show (isPrime 11))
-    putStrLn (show (isPrime 21))
-    putStrLn (show (isPrime 31))
-    putStrLn (show (isPrime 41))
-    putStrLn (show (isPrime 111))
-    putStrLn (show (gcd 50 130))
-    putStrLn (show (gcd 130 50))
-    putStrLn (show (gcd 111 41))
-    putStrLn (show (gcd 31 41))
-    putStrLn (show (gcd 80 20))
-    putStrLn (show (gcd 30 18))
-    putStrLn (show (gcd 18 30))
+    assert $ not $ isPrime 1
+    assert $ isPrime 2
+    assert $ isPrime 3
+    assert $ not $ isPrime 4
+    assert $ isPrime 5
+    assert $ not $ isPrime 6
+    assert $ isPrime 7
+    assert $ not $ isPrime 8
+    assert $ not $ isPrime 9
+    assert $ not $ isPrime 10
+    assert $ isPrime 11
+    assert $ not $ isPrime 21
+    assert $ isPrime 31
+    assert $ isPrime 41
+    assert $ not $ isPrime 111
+    assert $ not $ isPrime 112
+    assert $ (gcd 50 130) == 10
+    assert $ (gcd 130 50) == 10
+    assert $ (gcd 111 41) == 1
+    assert $ (gcd 31 41) == 1
+    assert $ (gcd 80 20) == 20
+    assert $ (gcd 30 18) == 6
+    assert $ (gcd 18 30) == 6
 
 main :: IO ()
 main = do
