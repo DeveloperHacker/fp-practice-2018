@@ -5,8 +5,11 @@ import Task1_1 (Term(IntConstant, Variable))
 import Task1_1 (Term, (|+|), (|-|), (|*|), replaceVar, evaluate)
 import Task1_2 (sin, cos, pow, isPrime, gcd)
 
-assert False = error "assertion failed!"
-assert _     = putStr ""
+assertEquals actual expected | actual == expected = putStr ""
+assertEquals actual expected = error $ concat ["expected: ", (show expected), " but was: ", (show actual)]
+
+assertTrue False = error "assertion failed!"
+assertTrue _     = putStr ""
 
 test1_1 = 
     let 
@@ -30,11 +33,11 @@ test1_1 =
 
 test1_2 = do
     putStrLn "Test1-2"
-    assert $ (pow (-1) 10) == 1
-    assert $ (pow 3 3) == 27
-    assert $ (pow 9 2) == 81
-    assert $ (pow 3 4) == 81
-    assert $ (pow 2 64) == 4294967296 * 4294967296
+    assertEquals (pow (-1) 10) 1
+    assertEquals (pow 3 3) 27
+    assertEquals (pow 9 2) 81
+    assertEquals (pow 3 4) 81
+    assertEquals (pow 2 64) (4294967296 * 4294967296)
     -- putStrLn $ show $ pow 2 10000000
     putStrLn "sin"
     putStrLn $ show $ sin $ pi / 4
@@ -43,29 +46,32 @@ test1_2 = do
     putStrLn $ show $ cos $ pi / 4
     putStrLn $ show $ cos $ pi / 4 + pi * 100
     putStrLn $ show $ cos $ pi / 4 - pi * 100
-    assert $ not $ isPrime 1
-    assert $ isPrime 2
-    assert $ isPrime 3
-    assert $ not $ isPrime 4
-    assert $ isPrime 5
-    assert $ not $ isPrime 6
-    assert $ isPrime 7
-    assert $ not $ isPrime 8
-    assert $ not $ isPrime 9
-    assert $ not $ isPrime 10
-    assert $ isPrime 11
-    assert $ not $ isPrime 21
-    assert $ isPrime 31
-    assert $ isPrime 41
-    assert $ not $ isPrime 111
-    assert $ not $ isPrime 112
-    assert $ (gcd 50 130) == 10
-    assert $ (gcd 130 50) == 10
-    assert $ (gcd 111 41) == 1
-    assert $ (gcd 31 41) == 1
-    assert $ (gcd 80 20) == 20
-    assert $ (gcd 30 18) == 6
-    assert $ (gcd 18 30) == 6
+    assertTrue $ not $ isPrime 1
+    assertTrue $ isPrime 2
+    assertTrue $ isPrime 3
+    assertTrue $ not $ isPrime 4
+    assertTrue $ isPrime 5
+    assertTrue $ not $ isPrime 6
+    assertTrue $ isPrime 7
+    assertTrue $ not $ isPrime 8
+    assertTrue $ not $ isPrime 9
+    assertTrue $ not $ isPrime 10
+    assertTrue $ isPrime 11
+    assertTrue $ not $ isPrime 21
+    assertTrue $ isPrime 31
+    assertTrue $ isPrime 41
+    assertTrue $ not $ isPrime 111
+    assertTrue $ not $ isPrime 112
+    assertEquals (gcd 1 1) 1
+    assertEquals (gcd 1 10) 1
+    assertEquals (gcd 10 10) 10
+    assertEquals (gcd 50 130) 10
+    assertEquals (gcd 130 50) 10
+    assertEquals (gcd 111 41) 1
+    assertEquals (gcd 31 41) 1
+    assertEquals (gcd 80 20) 20
+    assertEquals (gcd 30 18) 6
+    assertEquals (gcd 18 30) 6
 
 main :: IO ()
 main = do

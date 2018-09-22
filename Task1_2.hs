@@ -47,11 +47,15 @@ cos x = let
 
 -- наибольший общий делитель двух чисел
 gcd :: Integer -> Integer -> Integer
-gcd 0 0 = 0
-gcd 0 y | y > 0 = y
-gcd x 0 | x > 0 = x
-gcd x y | x > y && x > 0 && y > 0 = gcd (x `mod` y) y
-gcd x y | x > 0 && y > 0 = gcd x (y `mod` x)
+gcd x y | x <= 0 = error $ concat ["Unsupported operation for non natural numbers like x=", show x]
+gcd x y | y <= 0 = error $ concat ["Unsupported operation for non natural numbers like y=", show y]
+gcd x y = let
+    solve x 0 = x
+    solve 0 y = y
+    solve x y | x > y = solve (x `mod` y) y
+    solve x y = solve x (y `mod` x)
+    in
+    solve x y
 
 -- существует ли полный целочисленный квадрат в диапазоне [from, to)?
 doesSquareBetweenExist :: Integer -> Integer -> Bool
@@ -65,6 +69,7 @@ isDateCorrect day month year = todo
 -- возведение числа в степень, duh
 -- готовые функции и плавающую арифметику использовать нельзя
 pow :: Integer -> Integer -> Integer
+pow x y | y < 0 = error $ concat ["Unsupported operation for negative numbers like ", show y]
 pow x 0 = 1
 pow x 1 = x
 pow x y | y >= 2 = case (y `div` 2, y `mod` 2)of
@@ -73,6 +78,7 @@ pow x y | y >= 2 = case (y `div` 2, y `mod` 2)of
 
 -- является ли данное число простым?
 isPrime :: Integer -> Bool
+isPrime x | x < 1 = error $ concat ["Unsupported operation for non natural numbers like ", show x]
 isPrime 1 = False
 isPrime x | x > 1 = let
     step :: Integer -> Bool
