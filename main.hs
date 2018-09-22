@@ -43,6 +43,7 @@ test1_2 = do
     putStrLn $ show $ sin $ pi / 4
     putStrLn $ show $ sin $ pi / 4 + pi * 100
     putStrLn $ show $ sin $ pi / 4 - pi * 100
+    putStrLn "cos"
     putStrLn $ show $ cos $ pi / 4
     putStrLn $ show $ cos $ pi / 4 + pi * 100
     putStrLn $ show $ cos $ pi / 4 - pi * 100

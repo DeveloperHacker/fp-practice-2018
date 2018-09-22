@@ -29,7 +29,7 @@ replaceVar :: String -> Term -> Term -> Term
 replaceVar varName replacement expression = case (expression) of
     Variable var | var == varName -> replacement
     BinaryTerm op lhv rhv -> BinaryTerm op (replaceVar varName replacement lhv) (replaceVar varName replacement rhv)
-    othervise -> expression
+    _ -> expression
 
 -- Посчитать значение выражения `Term`
 -- если оно состоит только из констант
@@ -41,15 +41,15 @@ evaluate expression = case (expression) of
         (IntConstant a, IntConstant b) -> IntConstant $ a + b
         (IntConstant 0, _) -> r
         (_, IntConstant 0) -> l
-        othervise -> l
+        _ -> l
     BinaryTerm Minus (evaluate -> l) (evaluate -> r) -> case (l, r) of 
         (IntConstant a, IntConstant b) -> IntConstant $ a - b
         (_, IntConstant 0) -> l
-        othervise -> l
+        _ -> l
     BinaryTerm Times (evaluate -> l) (evaluate -> r) -> case (l, r) of 
         (IntConstant a, IntConstant b) -> IntConstant $ a * b
         (IntConstant 0, _) -> IntConstant 0
         (_, IntConstant 0) -> IntConstant 0
         (IntConstant 1, _) -> r
         (_, IntConstant 1) -> l
-        othervise -> l
+        _ -> l
