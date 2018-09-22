@@ -14,13 +14,15 @@ sin x = let
     pow y 0 = 1
     pow y 1 = y
     pow y n | n > 1 = y * pow y (n - 1)
-    component :: Integer -> Double
-    component n | n >= 0 = (pow (-1) n) * (pow x (2 * n + 1)) / (fromIntegral (factor (2 * n + 1)))
-    solve :: Integer -> Double
-    eps = 1e-16
-    solve n = (\c -> if (abs(c) < eps) then c else c + solve (n + 1))(component n) 
+    component :: Double -> Integer -> Double
+    component x n | n >= 0 = (pow (-1) n) * (pow x (2 * n + 1)) / (fromIntegral (factor (2 * n + 1)))
+    solve :: Double -> Integer -> Double
+    eps = 1e-8
+    solve x n = (\c -> if (abs(c) < eps) then c else c + solve x (n + 1))(component x n)
+    shift :: Double -> Double
+    shift x = x - 2 * pi * (realToFrac $ ceiling $ x / (2 * pi))
     in
-    solve 0
+    solve (shift x) 0
 
 -- косинус числа (формула Тейлора)
 cos :: Double -> Double
@@ -33,13 +35,15 @@ cos x = let
     pow y 0 = 1
     pow y 1 = y
     pow y n | n > 1 = y * pow y (n - 1)
-    component :: Integer -> Double
-    component n | n >= 0 = (pow (-1) n) * (pow x (2 * n)) / (fromIntegral (factor (2 * n)))
-    solve :: Integer -> Double
-    eps = 1e-16
-    solve n = (\c -> if (abs(c) < eps) then c else c + solve (n + 1))(component n) 
+    component :: Double -> Integer -> Double
+    component x n | n >= 0 = (pow (-1) n) * (pow x (2 * n)) / (fromIntegral (factor (2 * n)))
+    solve :: Double -> Integer -> Double
+    eps = 1e-8
+    solve x n = (\c -> if (abs(c) < eps) then c else c + solve x (n + 1))(component x n) 
+    shift :: Double -> Double
+    shift x = x - 2 * pi * (realToFrac $ ceiling $ x / (2 * pi))
     in
-    solve 0
+    solve (shift x) 0
 
 -- наибольший общий делитель двух чисел
 gcd :: Integer -> Integer -> Integer

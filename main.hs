@@ -38,7 +38,11 @@ test1_2 = do
     -- putStrLn $ show $ pow 2 10000000
     putStrLn "sin"
     putStrLn $ show $ sin $ pi / 4
+    putStrLn $ show $ sin $ pi / 4 + pi * 100
+    putStrLn $ show $ sin $ pi / 4 - pi * 100
     putStrLn $ show $ cos $ pi / 4
+    putStrLn $ show $ cos $ pi / 4 + pi * 100
+    putStrLn $ show $ cos $ pi / 4 - pi * 100
     assert $ not $ isPrime 1
     assert $ isPrime 2
     assert $ isPrime 3
