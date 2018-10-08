@@ -1,9 +1,10 @@
 module Main where
 
-import Prelude hiding (sin, cos, gcd)
+import Prelude hiding (sin, cos, gcd, lookup)
 import Task1_1 (Term(IntConstant, Variable))
 import Task1_1 (Term, (|+|), (|-|), (|*|), replaceVar, evaluate)
 import Task1_2 (sin, cos, pow, isPrime, gcd)
+import Task2_1
 
 assertEquals actual expected | actual == expected = putStr ""
 assertEquals actual expected = error $ concat ["expected: ", (show expected), " but was: ", (show actual)]
@@ -13,7 +14,7 @@ assertTrue _     = putStr ""
 
 test1_1 = 
     let 
-        expr1 = (Variable "a") |+| Variable "b" |*| Variable "c"
+        expr1 = Variable "a" |+| Variable "b" |*| Variable "c"
         expr2 = Variable "a" |-| Variable "b" |-| Variable "c"
         expr3 = Variable "a" |-| Variable "b" |*| IntConstant 10 |-| Variable "c"
         expr4 = expr1 |*| expr2 |+| expr3
@@ -74,8 +75,44 @@ test1_2 = do
     assertEquals (gcd 30 18) 6
     assertEquals (gcd 18 30) 6
 
+
+test2_1 = let
+        tree1 = insert (10, 9) $ insert (2, 8) $ insert (0, 7) $ insert (-1, 6) $ insert (4, 5) $ insert (3, 4) $ insert (7, 3) $ insert (1, 2) $ insert (8, 1) emptyTree
+        tree1m = TreeMapNode 8 1 (TreeMapNode 1 2 (TreeMapNode (-1) 6 EmptyTreeMap (TreeMapNode 0 7 EmptyTreeMap EmptyTreeMap)) (TreeMapNode 7 3 (TreeMapNode 3 4 (TreeMapNode 2 8 EmptyTreeMap EmptyTreeMap) (TreeMapNode 4 5 EmptyTreeMap EmptyTreeMap)) EmptyTreeMap)) (TreeMapNode 10 9 EmptyTreeMap EmptyTreeMap)
+        tree2 = remove 3 tree1
+        tree2m = TreeMapNode 8 1 (TreeMapNode 1 2 (TreeMapNode (-1) 6 EmptyTreeMap (TreeMapNode 0 7 EmptyTreeMap EmptyTreeMap)) (TreeMapNode 7 3 (TreeMapNode 4 5 (TreeMapNode 2 8 EmptyTreeMap EmptyTreeMap) EmptyTreeMap) EmptyTreeMap)) (TreeMapNode 10 9 EmptyTreeMap EmptyTreeMap)
+    in do
+        putStrLn "Test2-1"
+        assertEquals (emptyTree :: (TreeMap Integer)) EmptyTreeMap
+        assertEquals tree1 tree1m
+        assertEquals tree2 tree2m
+        assertTrue $ contains tree1 3
+        assertTrue $ contains tree1 2
+        assertTrue $ contains tree1 4
+        assertTrue $ not $ contains tree2 3
+        assertTrue $ contains tree2 2
+        assertTrue $ contains tree2 4
+        assertEquals (lookup 2 tree1) 8
+        assertEquals (lookup 4 tree1) 5
+        assertEquals (lookup (-1) tree1) 6
+        assertEquals (lookup 3 tree1) 4
+        assertEquals (lookup 2 tree2) 8
+        assertEquals (lookup 4 tree2) 5
+        assertEquals (lookup (-1) tree2) 6
+        assertEquals (nearestLE 1 tree1) (-1, 6)
+        assertEquals (nearestLE 8 tree1) (10, 9)
+        assertEquals (nearestLE 7 tree1) (3, 4)
+        assertEquals (nearestLE (-1) tree1) (0, 7)
+        assertEquals (kMean 3 tree1) (2, 8)
+        assertEquals (kMean 4 tree1) (3, 4)
+        assertEquals (kMean 5 tree1) (4, 5)
+        assertEquals (kMean 3 tree2) (2, 8)
+        assertEquals (kMean 4 tree2) (4, 5)
+
 main :: IO ()
 main = do
     test1_1
     putStrLn ""
     test1_2
+    putStrLn ""
+    test2_1
