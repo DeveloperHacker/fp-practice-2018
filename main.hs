@@ -18,11 +18,20 @@ test1_1 =
         expr2 = Variable "a" |-| Variable "b" |-| Variable "c"
         expr3 = Variable "a" |-| Variable "b" |*| IntConstant 10 |-| Variable "c"
         expr4 = expr1 |*| expr2 |+| expr3
-        value1 = replaceVar "a" (IntConstant 2) $ replaceVar "b" (IntConstant 3) $ replaceVar "c" (IntConstant 4) expr1
-        value2 = replaceVar "a" (IntConstant 2) $ replaceVar "c" (IntConstant 0) expr1
-        value3 = replaceVar "a" (IntConstant 2) $ replaceVar "b" (IntConstant 3) $ replaceVar "c" (IntConstant 4) expr2
-        value4 = replaceVar "a" (IntConstant 2) $ replaceVar "b" (IntConstant 3) $ replaceVar "c" (IntConstant 4) expr3
-        value5 = replaceVar "a" (IntConstant 2) $ replaceVar "b" (IntConstant 3) $ replaceVar "c" (IntConstant 4) expr4
+        value1 = replaceVar "a" (IntConstant 2) $ 
+                    replaceVar "b" (IntConstant 3) $ 
+                        replaceVar "c" (IntConstant 4) expr1
+        value2 = replaceVar "a" (IntConstant 2) $ 
+                        replaceVar "c" (IntConstant 0) expr1
+        value3 = replaceVar "a" (IntConstant 2) $ 
+                    replaceVar "b" (IntConstant 3) $ 
+                        replaceVar "c" (IntConstant 4) expr2
+        value4 = replaceVar "a" (IntConstant 2) $ 
+                    replaceVar "b" (IntConstant 3) $ 
+                        replaceVar "c" (IntConstant 4) expr3
+        value5 = replaceVar "a" (IntConstant 2) $ 
+                    replaceVar "b" (IntConstant 3) $ 
+                        replaceVar "c" (IntConstant 4) expr4
     in
     do
         putStrLn "Test1-1"
@@ -77,10 +86,50 @@ test1_2 = do
 
 
 test2_1 = let
-        tree1 = insert (10, 9) $ insert (2, 8) $ insert (0, 7) $ insert (-1, 6) $ insert (4, 5) $ insert (3, 4) $ insert (7, 3) $ insert (1, 2) $ insert (8, 1) emptyTree
-        tree1m = TreeMapNode 8 1 (TreeMapNode 1 2 (TreeMapNode (-1) 6 EmptyTreeMap (TreeMapNode 0 7 EmptyTreeMap EmptyTreeMap)) (TreeMapNode 7 3 (TreeMapNode 3 4 (TreeMapNode 2 8 EmptyTreeMap EmptyTreeMap) (TreeMapNode 4 5 EmptyTreeMap EmptyTreeMap)) EmptyTreeMap)) (TreeMapNode 10 9 EmptyTreeMap EmptyTreeMap)
+        tree1 = insert (10, 9) $ 
+                    insert (2, 8) $ 
+                        insert (0, 7) $ 
+                            insert (-1, 6) $ 
+                                insert (4, 5) $ 
+                                    insert (3, 4) $ 
+                                        insert (7, 3) $ 
+                                            insert (1, 2) $ 
+                                                insert (8, 1) emptyTree
+        tree1m = TreeMapNode 9 8 1 (
+                    TreeMapNode 7 1 2 (
+                        TreeMapNode 2 (-1) 6 EmptyTreeMap (
+                            TreeMapNode 1 0 7 EmptyTreeMap EmptyTreeMap
+                        )
+                    ) (
+                        TreeMapNode 4 7 3 (
+                            TreeMapNode 3 3 4 (
+                                TreeMapNode 1 2 8 EmptyTreeMap EmptyTreeMap
+                            ) (
+                                TreeMapNode 1 4 5 EmptyTreeMap EmptyTreeMap
+                            )
+                        ) EmptyTreeMap
+                    )
+                ) (
+                    TreeMapNode 1 10 9 EmptyTreeMap EmptyTreeMap
+                )
+        list1 = [(-1,6),(0,7),(1,2),(2,8),(3,4),(4,5),(7,3),(8,1),(10,9)]
         tree2 = remove 3 tree1
-        tree2m = TreeMapNode 8 1 (TreeMapNode 1 2 (TreeMapNode (-1) 6 EmptyTreeMap (TreeMapNode 0 7 EmptyTreeMap EmptyTreeMap)) (TreeMapNode 7 3 (TreeMapNode 4 5 (TreeMapNode 2 8 EmptyTreeMap EmptyTreeMap) EmptyTreeMap) EmptyTreeMap)) (TreeMapNode 10 9 EmptyTreeMap EmptyTreeMap)
+        tree2m = TreeMapNode 8 8 1 (
+                    TreeMapNode 6 1 2 (
+                        TreeMapNode 2 (-1) 6 EmptyTreeMap (
+                            TreeMapNode 1 0 7 EmptyTreeMap EmptyTreeMap
+                        )
+                    ) (
+                        TreeMapNode 3 7 3 (
+                            TreeMapNode 2 4 5 (
+                                TreeMapNode 1 2 8 EmptyTreeMap EmptyTreeMap
+                            ) EmptyTreeMap
+                        ) EmptyTreeMap
+                    )
+                ) (
+                    TreeMapNode 1 10 9 EmptyTreeMap EmptyTreeMap
+                )
+        list2 = [(-1,6),(0,7),(1,2),(2,8),(4,5),(7,3),(8,1),(10,9)]
     in do
         putStrLn "Test2-1"
         assertEquals (emptyTree :: (TreeMap Integer)) EmptyTreeMap
@@ -92,6 +141,8 @@ test2_1 = let
         assertTrue $ not $ contains tree2 3
         assertTrue $ contains tree2 2
         assertTrue $ contains tree2 4
+        assertEquals (listFromTree tree1) list1
+        assertEquals (listFromTree tree2) list2
         assertEquals (lookup 2 tree1) 8
         assertEquals (lookup 4 tree1) 5
         assertEquals (lookup (-1) tree1) 6
@@ -106,8 +157,11 @@ test2_1 = let
         assertEquals (kMean 3 tree1) (2, 8)
         assertEquals (kMean 4 tree1) (3, 4)
         assertEquals (kMean 5 tree1) (4, 5)
+        assertEquals (kMean 7 tree1) (8, 1)
         assertEquals (kMean 3 tree2) (2, 8)
         assertEquals (kMean 4 tree2) (4, 5)
+        assertEquals (kMean 6 tree2) (8, 1)
+        assertEquals (kMean 7 tree2) (10, 9)
 
 main :: IO ()
 main = do
