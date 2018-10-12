@@ -1,10 +1,12 @@
 module Main where
 
-import Prelude hiding (sin, cos, gcd, lookup)
+import Prelude hiding (sin, cos, gcd, lookup, foldl, foldr, unfoldr, map, concatMap, 
+    filter, maxBy, minBy, reverse, sum, product, elem)
 import Task1_1 (Term(IntConstant, Variable))
 import Task1_1 (Term, (|+|), (|-|), (|*|), replaceVar, evaluate)
 import Task1_2 (sin, cos, pow, isPrime, gcd)
 import Task2_1
+import Task2_2
 
 assertEquals actual expected | actual == expected = putStr ""
 assertEquals actual expected = error $ concat ["expected: ", (show expected), " but was: ", (show actual)]
@@ -163,6 +165,14 @@ test2_1 = let
         assertEquals (kMean 6 tree2) (8, 1)
         assertEquals (kMean 7 tree2) (10, 9)
 
+test2_2 = do
+    putStrLn "Test2-1"
+    assertEquals (foldl (+) 0 [1, 2, 3, 4, 5]) 15
+    assertEquals (foldl (-) 0 [1, 2, 3, 4, 5]) (-15)
+    assertEquals (foldr (+) 0 [1, 2, 3, 4, 5]) 15
+    assertEquals (foldr (-) 0 [1, 2, 3, 4, 5]) 3
+
+
 main :: IO ()
 main = do
     test1_1
@@ -170,3 +180,5 @@ main = do
     test1_2
     putStrLn ""
     test2_1
+    putStrLn ""
+    test2_2

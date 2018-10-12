@@ -6,10 +6,14 @@ import Prelude hiding (foldl, foldr, unfoldr, map, concatMap,
     filter, maxBy, minBy, reverse, sum, product, elem)
 
 foldl :: (b -> a -> b) -> b -> [a] -> b
-foldl = todo
+foldl merge acc lst = case (lst) of 
+    [] -> acc
+    (h: t) -> foldl merge (merge acc h) t
 
 foldr :: (a -> b -> b) -> b -> [a] -> b
-foldr = todo
+foldr merge acc lst = case (lst) of 
+    [] -> acc
+    (h: t) -> foldr merge (merge h acc) t
 
 unfoldr :: (b -> Maybe (a, b)) -> b -> [a]
 unfoldr = todo
