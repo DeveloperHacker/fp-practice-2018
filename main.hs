@@ -36,29 +36,27 @@ test1_1 =
                         replaceVar "c" (IntConstant 4) expr4
     in
     do
-        putStrLn "Test1-1"
-        putStrLn (show $ evaluate value1)
-        putStrLn (show $ evaluate value2)
-        putStrLn (show $ evaluate value3)
-        putStrLn (show $ evaluate value4)
-        putStrLn (show $ evaluate value5)
+        assertEquals (evaluate value1) (IntConstant 14)
+        assertEquals (evaluate value2) (IntConstant 2)
+        assertEquals (evaluate value3) (IntConstant (-5))
+        assertEquals (evaluate value4) (IntConstant (-32))
+        assertEquals (evaluate value5) (IntConstant (-102))
 
 test1_2 = do
-    putStrLn "Test1-2"
     assertEquals (pow (-1) 10) 1
     assertEquals (pow 3 3) 27
     assertEquals (pow 9 2) 81
     assertEquals (pow 3 4) 81
     assertEquals (pow 2 64) (4294967296 * 4294967296)
     -- putStrLn $ show $ pow 2 10000000
-    putStrLn "sin"
-    putStrLn $ show $ sin $ pi / 4
-    putStrLn $ show $ sin $ pi / 4 + pi * 100
-    putStrLn $ show $ sin $ pi / 4 - pi * 100
-    putStrLn "cos"
-    putStrLn $ show $ cos $ pi / 4
-    putStrLn $ show $ cos $ pi / 4 + pi * 100
-    putStrLn $ show $ cos $ pi / 4 - pi * 100
+    -- putStrLn "sin"
+    -- putStrLn $ show $ sin $ pi / 4
+    -- putStrLn $ show $ sin $ pi / 4 + pi * 100
+    -- putStrLn $ show $ sin $ pi / 4 - pi * 100
+    -- putStrLn "cos"
+    -- putStrLn $ show $ cos $ pi / 4
+    -- putStrLn $ show $ cos $ pi / 4 + pi * 100
+    -- putStrLn $ show $ cos $ pi / 4 - pi * 100
     assertTrue $ not $ isPrime 1
     assertTrue $ isPrime 2
     assertTrue $ isPrime 3
@@ -133,7 +131,6 @@ test2_1 = let
                 )
         list2 = [(-1,6),(0,7),(1,2),(2,8),(4,5),(7,3),(8,1),(10,9)]
     in do
-        putStrLn "Test2-1"
         assertEquals (emptyTree :: (TreeMap Integer)) EmptyTreeMap
         assertEquals tree1 tree1m
         assertEquals tree2 tree2m
@@ -166,19 +163,54 @@ test2_1 = let
         assertEquals (kMean 7 tree2) (10, 9)
 
 test2_2 = do
-    putStrLn "Test2-1"
     assertEquals (foldl (+) 0 [1, 2, 3, 4, 5]) 15
     assertEquals (foldl (-) 0 [1, 2, 3, 4, 5]) (-15)
     assertEquals (foldr (+) 0 [1, 2, 3, 4, 5]) 15
     assertEquals (foldr (-) 0 [1, 2, 3, 4, 5]) 3
-
+    assertEquals (unfoldr (\a -> if a > 10 then Nothing else Just (a, a + 1)) 0) [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    assertEquals (unfoldr (\a -> Nothing) 10) ([] :: [Integer])
+    assertEquals (map (+1) [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    assertEquals (product [1, 2, 3, 4, 5]) 120
+    assertEquals (product []) 1
+    assertEquals (catMaybes [Just 0, Just 1, Nothing, Just 3, Nothing, Just 5]) [0, 1, 3, 5]
+    assertEquals (diagonal [[1, 0, 0], [0, 2, 0], [0, 0, 3]]) [1, 2, 3]
+    assertEquals (diagonal [[1, 0, 0], [0, 2, 0], [0, 0, 3], [0, 0, 0]]) [1, 2, 3]
+    assertEquals (diagonal [[1, 0, 0, 0], [0, 2, 0, 0], [0, 0, 3, 0]]) [1, 2, 3]
+    assertEquals (map (\(Just e) -> e) $ filterNot (\e -> e == Nothing) [Just 0, Just 1, Nothing, Just 3, Nothing, Just 5]) [0, 1, 3, 5]
+    assertTrue $ elem 1 [1, 2, 3, 1, 4, 5]
+    assertTrue $ elem 2 [1, 2, 3, 1, 4, 5]
+    assertTrue $ not $ elem 0 [1, 2, 3, 1, 4, 5]
+    assertEquals (rangeTo 0 4 1) [0, 1, 2, 3]
+    assertEquals (rangeTo 0 0 1) []
+    assertEquals (rangeTo 0 4 3) [0, 3]
+    assertEquals (rangeTo 0 6 3) [0, 3]
+    assertEquals (rangeTo 0 7 3) [0, 3, 6]
+    assertEquals (append [1, 2, 3, 4] [5, 6, 7]) [1, 2, 3, 4, 5, 6, 7]
+    assertEquals (append [1, 2, 3, 4] []) [1, 2, 3, 4]
+    assertEquals (append [] [5, 6, 7]) [5, 6, 7]
+    assertEquals (append [] []) ([] :: [Integer])
+    assertEquals (groups [1, 2, 3, 4] 1) [[1], [2], [3], [4]]
+    assertEquals (groups [1, 2, 3, 4] 2) [[1, 2], [3, 4]]
+    assertEquals (groups [1, 2, 3, 4, 5] 2) [[1, 2], [3, 4], [5]]
+    assertEquals (groups [1, 2, 3, 4, 5] 3) [[1, 2, 3], [4, 5]]
+    assertEquals (groups [1, 2, 3, 4, 5] 7) [[1, 2, 3, 4, 5]]
+    assertEquals (groups [] 7) ([[]] :: [[Integer]])
+    assertEquals (groups [] 1) ([[]] :: [[Integer]])
+    assertEquals (groups [1, 2, 3, 4, 5] 0) [[], [1, 2, 3, 4, 5]] -- wtf?
+    assertEquals (groups [1, 2, 3, 4, 5] (-1)) [[1, 2, 3, 4, 5]] -- yet wtf?
+    
 
 main :: IO ()
 main = do
+    putStr "Test 1-1 "
     test1_1
-    putStrLn ""
+    putStrLn "SUCCESS"
+    putStr "Test 1-2 "
     test1_2
-    putStrLn ""
+    putStrLn "SUCCESS"
+    putStr "Test 2-1 "
     test2_1
-    putStrLn ""
+    putStrLn "SUCCESS"
+    putStr "Test 2-2 "
     test2_2
+    putStrLn "SUCCESS"
