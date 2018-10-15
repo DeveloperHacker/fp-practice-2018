@@ -8,6 +8,7 @@ import Task1_2 (sin, cos, pow, isPrime, gcd)
 import Task2_1
 import Task2_2
 import Task3_1
+import Task3_2
 
 assertEquals actual expected | actual == expected = putStr ""
 assertEquals actual expected = error $ concat ["expected: ", (show expected), " but was: ", (show actual)]
@@ -233,6 +234,31 @@ test3_1 = let
         assertEquals (fromInteger 5 `quotRem` fromInteger 5) (fromInteger 1 :: WeirdPeanoNumber, fromInteger 0 :: WeirdPeanoNumber)
         assertEquals (fromInteger (-20) `divMod` fromInteger 3) (fromInteger (-7) :: WeirdPeanoNumber, fromInteger 1 :: WeirdPeanoNumber)
 
+test3_2 = let 
+        list1 = RCons (RCons (RCons (RCons (RCons RNil 1) 2) 3) 4) 5
+    in do
+        assertEquals (show list1) "RCons (RCons (RCons (RCons (RCons (RNil) 1) 2) 3) 4) 5"
+        assertEquals list1 list1
+        assertEquals (listToRList [1, 2, 3, 4, 5]) list1
+        assertEquals (rlistToList list1) [1, 2, 3, 4, 5]
+        assertTrue $ list1 <= list1
+        assertTrue $ (listToRList [1, 2, 3, 4, 5]) <= (listToRList [1, 2, 3, 4, 5])
+        assertTrue $ (listToRList [0, 2, 3, 4, 5]) <= (listToRList [1, 2, 3, 4, 5])
+        assertTrue $ not $ (listToRList [0, 2, 3, 4, 6]) <= (listToRList [1, 2, 3, 4, 5])
+        assertTrue $ (listToRList [2, 2, 3, 4, 4]) <= (listToRList [1, 2, 3, 4, 5])
+        assertTrue $ (listToRList [1, 2, 3, 4, 4]) <= (listToRList [1, 2, 3, 4, 5])
+        assertTrue $ (listToRList [1, 2, 3, 4]) <= (listToRList [1, 2, 3, 4, 5])
+        assertTrue $ (listToRList [2, 3, 4, 5]) <= (listToRList [1, 2, 3, 4, 5])
+        assertTrue $ not $ (listToRList [1, 2, 3, 4, 6]) <= (listToRList [1, 2, 3, 4, 5])
+        assertTrue $ not $ (listToRList [1, 2, 3, 4, 5]) <= (listToRList [2, 3, 4, 5])
+        assertTrue $ not $ (listToRList [1, 2, 3, 4, 5]) <= (listToRList [1, 2, 3, 4])
+        assertEquals ((listToRList [5, 6]) <> ((listToRList [4]) <> (listToRList [1, 2, 3]))) (((listToRList [5, 6]) <> (listToRList [4])) <> (listToRList [1, 2, 3]))
+        assertEquals ((listToRList [5, 6]) <> ((listToRList [4]) <> (listToRList [1, 2, 3]))) (listToRList [1, 2, 3, 4, 5, 6])
+        assertEquals ((listToRList [1, 2, 3, 4, 5, 6]) <> mempty) (listToRList [1, 2, 3, 4, 5, 6])
+        assertEquals (mempty <> (listToRList [1, 2, 3, 4, 5, 6])) (listToRList [1, 2, 3, 4, 5, 6])
+        assertEquals (mconcat [listToRList [5, 6], listToRList [4], listToRList [1, 2, 3]]) (foldr (<>) mempty [listToRList [5, 6], listToRList [4], listToRList [1, 2, 3]])
+        assertEquals (fmap id listToRList [1, 2, 3, 4, 5, 6]) (listToRList [1, 2, 3, 4, 5, 6])
+        assertEquals (fmap (+3) (listToRList [1, 2, 3, 4, 5, 6])) (listToRList [4, 5, 6, 7, 8, 9])
 
 main :: IO ()
 main = do
@@ -250,4 +276,7 @@ main = do
     putStrLn "SUCCESS"
     putStr "Test 3-1 "
     test3_1
+    putStrLn "SUCCESS"
+    putStr "Test 3-2 "
+    test3_2
     putStrLn "SUCCESS"
