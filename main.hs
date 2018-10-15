@@ -7,6 +7,7 @@ import Task1_1 (Term, (|+|), (|-|), (|*|), replaceVar, evaluate)
 import Task1_2 (sin, cos, pow, isPrime, gcd)
 import Task2_1
 import Task2_2
+import Task3_1
 
 assertEquals actual expected | actual == expected = putStr ""
 assertEquals actual expected = error $ concat ["expected: ", (show expected), " but was: ", (show actual)]
@@ -199,6 +200,39 @@ test2_2 = do
     assertEquals (groups [1, 2, 3, 4, 5] 0) [[], [1, 2, 3, 4, 5]] -- wtf?
     assertEquals (groups [1, 2, 3, 4, 5] (-1)) [[1, 2, 3, 4, 5]] -- yet wtf?
     
+test3_1 = let 
+        number1 = Pred $ Succ $ Succ $ Pred $ Pred $ Succ $ Succ $ Zero
+    in do
+        assertEquals number1 (Succ Zero)
+        assertEquals number1 (normalize number1)
+        assertEquals (normalize number1) (Succ Zero)
+        assertTrue $ number1 <= (Succ Zero)
+        assertTrue $ number1 >= (Succ Zero)
+        assertTrue $ number1 < (Succ number1)
+        assertTrue $ number1 > (Pred number1)
+        assertEquals (Pred $ Pred $ Pred $ Pred number1 + fromInteger 10) (fromInteger 7 :: WeirdPeanoNumber)
+        assertEquals (Pred $ Pred $ Pred $ Pred number1 - fromInteger 10) (fromInteger (-13) :: WeirdPeanoNumber)
+        assertEquals (signum number1) (fromInteger 1)
+        assertEquals (signum (-number1)) (fromInteger (-1) :: WeirdPeanoNumber)
+        assertEquals (toRational number1) 1
+        assertEquals (toRational (number1 + fromInteger 10 :: WeirdPeanoNumber)) 11
+        assertEquals (toEnum 1) number1
+        assertEquals (toEnum 11) (number1 + toEnum 10 :: WeirdPeanoNumber)
+        assertEquals (fromEnum number1) 1
+        assertEquals (fromEnum (number1 + toEnum 10 :: WeirdPeanoNumber)) 11
+        assertEquals (number1 * fromInteger 10) (fromInteger 10 :: WeirdPeanoNumber)
+        assertEquals (-number1 * fromInteger 10) (fromInteger (-10) :: WeirdPeanoNumber)
+        assertEquals (fromInteger 11 * fromInteger (-10)) (fromInteger (-110) :: WeirdPeanoNumber)
+        assertEquals (fromInteger (-11) * fromInteger (-10)) (fromInteger 110 :: WeirdPeanoNumber)
+        assertEquals (fromInteger 11 * fromInteger 10) (fromInteger 110 :: WeirdPeanoNumber)
+        assertEquals (fromInteger (-20) `quotRem` fromInteger 3) (fromInteger (-6) :: WeirdPeanoNumber, fromInteger (-2) :: WeirdPeanoNumber)
+        assertEquals (fromInteger (-20) `quotRem` fromInteger (-3)) (fromInteger 6 :: WeirdPeanoNumber, fromInteger (-2) :: WeirdPeanoNumber)
+        assertEquals (fromInteger 20 `quotRem` fromInteger (-3)) (fromInteger (-6) :: WeirdPeanoNumber, fromInteger 2 :: WeirdPeanoNumber)
+        assertEquals (fromInteger 20 `quotRem` fromInteger 3) (fromInteger 6 :: WeirdPeanoNumber, fromInteger 2 :: WeirdPeanoNumber)
+        assertEquals (fromInteger 0 `quotRem` fromInteger 1) (fromInteger 0 :: WeirdPeanoNumber, fromInteger 0 :: WeirdPeanoNumber)
+        assertEquals (fromInteger 5 `quotRem` fromInteger 5) (fromInteger 1 :: WeirdPeanoNumber, fromInteger 0 :: WeirdPeanoNumber)
+        assertEquals (fromInteger (-20) `divMod` fromInteger 3) (fromInteger (-7) :: WeirdPeanoNumber, fromInteger 1 :: WeirdPeanoNumber)
+
 
 main :: IO ()
 main = do
@@ -213,4 +247,7 @@ main = do
     putStrLn "SUCCESS"
     putStr "Test 2-2 "
     test2_2
+    putStrLn "SUCCESS"
+    putStr "Test 3-1 "
+    test3_1
     putStrLn "SUCCESS"
