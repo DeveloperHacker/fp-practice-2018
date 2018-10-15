@@ -9,6 +9,7 @@ import Task2_1
 import Task2_2
 import Task3_1
 import Task3_2
+import Task3_3 
 
 assertEquals actual expected | actual == expected = putStr ""
 assertEquals actual expected = error $ concat ["expected: ", (show expected), " but was: ", (show actual)]
@@ -114,7 +115,7 @@ test2_1 = let
                 ) (
                     TreeMapNode 1 10 9 EmptyTreeMap EmptyTreeMap
                 )
-        list1 = [(-1,6),(0,7),(1,2),(2,8),(3,4),(4,5),(7,3),(8,1),(10,9)]
+        list = [(-1,6),(0,7),(1,2),(2,8),(3,4),(4,5),(7,3),(8,1),(10,9)]
         tree2 = remove 3 tree1
         tree2m = TreeMapNode 8 8 1 (
                     TreeMapNode 6 1 2 (
@@ -142,7 +143,7 @@ test2_1 = let
         assertTrue $ not $ contains tree2 3
         assertTrue $ contains tree2 2
         assertTrue $ contains tree2 4
-        assertEquals (listFromTree tree1) list1
+        assertEquals (listFromTree tree1) list
         assertEquals (listFromTree tree2) list2
         assertEquals (lookup 2 tree1) 8
         assertEquals (lookup 4 tree1) 5
@@ -235,13 +236,13 @@ test3_1 = let
         assertEquals (fromInteger (-20) `divMod` fromInteger 3) (fromInteger (-7) :: WeirdPeanoNumber, fromInteger 1 :: WeirdPeanoNumber)
 
 test3_2 = let 
-        list1 = RCons (RCons (RCons (RCons (RCons RNil 1) 2) 3) 4) 5
+        list = RCons (RCons (RCons (RCons (RCons RNil 1) 2) 3) 4) 5
     in do
-        assertEquals (show list1) "RCons (RCons (RCons (RCons (RCons (RNil) 1) 2) 3) 4) 5"
-        assertEquals list1 list1
-        assertEquals (listToRList [1, 2, 3, 4, 5]) list1
-        assertEquals (rlistToList list1) [1, 2, 3, 4, 5]
-        assertTrue $ list1 <= list1
+        assertEquals (show list) "RCons (RCons (RCons (RCons (RCons (RNil) 1) 2) 3) 4) 5"
+        assertEquals list list
+        assertEquals (listToRList [1, 2, 3, 4, 5]) list
+        assertEquals (rlistToList list) [1, 2, 3, 4, 5]
+        assertTrue $ list <= list
         assertTrue $ (listToRList [1, 2, 3, 4, 5]) <= (listToRList [1, 2, 3, 4, 5])
         assertTrue $ (listToRList [0, 2, 3, 4, 5]) <= (listToRList [1, 2, 3, 4, 5])
         assertTrue $ not $ (listToRList [0, 2, 3, 4, 6]) <= (listToRList [1, 2, 3, 4, 5])
@@ -259,6 +260,51 @@ test3_2 = let
         assertEquals (mconcat [listToRList [5, 6], listToRList [4], listToRList [1, 2, 3]]) (foldr (<>) mempty [listToRList [5, 6], listToRList [4], listToRList [1, 2, 3]])
         assertEquals (fmap id listToRList [1, 2, 3, 4, 5, 6]) (listToRList [1, 2, 3, 4, 5, 6])
         assertEquals (fmap (+3) (listToRList [1, 2, 3, 4, 5, 6])) (listToRList [4, 5, 6, 7, 8, 9])
+
+test3_3 = let
+        unionSet1 = PUnionSet (\e -> e == 1 || e == 2 || e == 3) :: PUnionSet Int
+        unionSet2 = PUnionSet (\e -> e == 4) :: PUnionSet Int
+        unionSet3 = PUnionSet (\e -> e == 5 || e == 6) :: PUnionSet Int
+        unionSet4 = PUnionSet (\e -> e == 1 || e == 2 || e == 3 || e == 4 || e == 5 || e == 6) :: PUnionSet Int
+        list = [0, 1, 2, 3, 4, 5, 6, 7]
+        mask1 = [False, True, True, True, True, True, True, False]
+        intersectionSet1 = PIntersectionSet (\e -> e == 1 || e == 2 || e == 3) :: PIntersectionSet Int
+        intersectionSet2 = PIntersectionSet (\e -> e == 2 || e == 3 || e == 4 || e == 5) :: PIntersectionSet Int
+        intersectionSet3 = PIntersectionSet (\e -> e == 1 || e == 2 || e == 3 || e == 6) :: PIntersectionSet Int
+        intersectionSet4 = PIntersectionSet (\e -> e == 2 || e == 3) :: PIntersectionSet Int
+        mask2 = [False, False, True, True, False, False, False, False]
+        plusSet1 = PPlusSet (\e -> e == 1 || e == 2 || e == 3) :: PPlusSet Int
+        plusSet2 = PPlusSet (\e -> e == 3 || e == 4 || e == 5) :: PPlusSet Int
+        plusSet3 = PPlusSet (\e -> e == 5 || e == 6) :: PPlusSet Int
+        plusSet4 = PPlusSet (\e -> e == 1 || e == 2 || e == 4 || e == 6) :: PPlusSet Int
+        mask3 = [False, True, True, False, True, False, True, False]
+        plus b = Inversable (\a -> a + b) (\a -> a - b)
+    in do
+        assertEquals (map (unionContains $ unionSet3 <> (unionSet2 <> unionSet1)) list) mask1
+        assertEquals (map (unionContains $ unionSet4) list) mask1
+        assertEquals (map (unionContains $ (unionSet3 <> unionSet2) <> unionSet1) list) mask1
+        assertEquals (map (unionContains $ unionSet4 <> mempty) list) mask1
+        assertEquals (map (unionContains $ mempty <> unionSet4) list) mask1
+        assertEquals (map (unionContains $ mconcat [unionSet3, unionSet2, unionSet1]) list) mask1
+        assertEquals (map (unionContains $ foldr (<>) mempty [unionSet3, unionSet2, unionSet1]) list) mask1
+        assertEquals (map (intersectionContains $ intersectionSet3 <> (intersectionSet2 <> intersectionSet1)) list) mask2
+        assertEquals (map (intersectionContains $ intersectionSet4) list) mask2
+        assertEquals (map (intersectionContains $ (intersectionSet3 <> intersectionSet2) <> intersectionSet1) list) mask2
+        assertEquals (map (intersectionContains $ intersectionSet4 <> mempty) list) mask2
+        assertEquals (map (intersectionContains $ mempty <> intersectionSet4) list) mask2
+        assertEquals (map (intersectionContains $ mconcat [intersectionSet3, intersectionSet2, intersectionSet1]) list) mask2
+        assertEquals (map (intersectionContains $ foldr (<>) mempty [intersectionSet3, intersectionSet2, intersectionSet1]) list) mask2
+        assertEquals (map (plusContains $ plusSet3 <> (plusSet2 <> plusSet1)) list) mask3
+        assertEquals (map (plusContains $ plusSet4) list) mask3
+        assertEquals (map (plusContains $ (plusSet3 <> plusSet2) <> plusSet1) list) mask3
+        assertEquals (map (plusContains $ plusSet4 <> mempty) list) mask3
+        assertEquals (map (plusContains $ mempty <> plusSet4) list) mask3
+        assertEquals (map (plusContains $ mconcat [plusSet3, plusSet2, plusSet1]) list) mask3
+        assertEquals (map (plusContains $ foldr (<>) mempty [plusSet3, plusSet2, plusSet1]) list) mask3
+        assertEquals (map (unionContains $ mmap (plus 3) unionSet1) list) [False, False, False, False, True, True, True, False]
+        assertEquals (map (intersectionContains $ mmap (plus 3) intersectionSet1) list) [False, False, False, False, True, True, True, False]
+        assertEquals (map (plusContains $ mmap (plus 3) plusSet1) list) [False, False, False, False, True, True, True, False]
+
 
 main :: IO ()
 main = do
@@ -279,4 +325,7 @@ main = do
     putStrLn "SUCCESS"
     putStr "Test 3-2 "
     test3_2
+    putStrLn "SUCCESS"
+    putStr "Test 3-3 "
+    test3_3
     putStrLn "SUCCESS"
