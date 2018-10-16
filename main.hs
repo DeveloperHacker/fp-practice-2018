@@ -9,7 +9,9 @@ import Task2_1
 import Task2_2
 import Task3_1
 import Task3_2
-import Task3_3 
+import Task3_3
+import Task4_1
+import Task4_2
 
 assertEquals actual expected | actual == expected = putStr ""
 assertEquals actual expected = error $ concat ["expected: ", (show expected), " but was: ", (show actual)]
@@ -305,6 +307,25 @@ test3_3 = let
         assertEquals (map (intersectionContains $ mmap (plus 3) intersectionSet1) list) [False, False, False, False, True, True, True, False]
         assertEquals (map (plusContains $ mmap (plus 3) plusSet1) list) [False, False, False, False, True, True, True, False]
 
+test4_1 = let 
+        plus x y = do
+            x' <- x
+            y' <- y
+            return $ x' + y'
+    in do
+        assertEquals (fun ((FunMonad length) `plus` (FunMonad ((+) 1 . length))) "hello") 11
+        assertEquals (fun ((FunMonad length) `plus` (FunMonad ((+) 1 . length))) "world!") 13
+
+test4_2 = let 
+        plus x y = do
+            x' <- x
+            y' <- y
+            return $ x' + y'
+        quadruple1 = FourOf 1 2 3 4
+        quadruple2 = FourOf 4 6 7 8
+        quadruple3 = FourOf 5 8 10 12
+    in do 
+        assertEquals (quadruple1 `plus` quadruple2) quadruple3
 
 main :: IO ()
 main = do
@@ -328,4 +349,10 @@ main = do
     putStrLn "SUCCESS"
     putStr "Test 3-3 "
     test3_3
+    putStrLn "SUCCESS"
+    putStr "Test 4-1 "
+    test4_1
+    putStrLn "SUCCESS"
+    putStr "Test 4-2 "
+    test4_2
     putStrLn "SUCCESS"
