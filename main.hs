@@ -12,6 +12,7 @@ import Task3_2
 import Task3_3
 import Task4_1
 import Task4_2
+import Task5_1
 
 assertEquals actual expected | actual == expected = putStr ""
 assertEquals actual expected = error $ concat ["expected: ", (show expected), " but was: ", (show actual)]
@@ -327,6 +328,21 @@ test4_2 = let
     in do 
         assertEquals (quadruple1 `plus` quadruple2) quadruple3
 
+
+test5_1 = do
+    assertEquals (index (list2dlist [1, 2, 3, 4, 5, 6]) 0) 1
+    assertEquals (index (list2dlist [1, 2, 3, 4, 5, 6]) 1) 2
+    assertEquals (index (list2dlist [1, 2, 3, 4, 5, 6]) 5) 6
+    assertEquals (dlist2list (insertAt (list2dlist [1, 2, 3, 4, 5, 6]) 0 3)) [3, 1, 2, 3, 4, 5, 6]
+    assertEquals (dlist2list (insertAt (list2dlist [1, 2, 3, 4, 5, 6]) 1 3)) [1, 3, 2, 3, 4, 5, 6]
+    assertEquals (dlist2list (insertAt (list2dlist [1, 2, 3, 4, 5, 6]) 5 3)) [1, 2, 3, 4, 5, 3, 6]
+    assertEquals (dlist2list (insertAt (list2dlist [1, 2, 3, 4, 5, 6]) 6 3)) [1, 2, 3, 4, 5, 6, 3]
+    assertEquals (dlist2list (removeAt (list2dlist [1, 2, 3, 4, 5, 6]) 0)) [2, 3, 4, 5, 6]
+    assertEquals (dlist2list (removeAt (list2dlist [1, 2, 3, 4, 5, 6]) 1)) [1, 3, 4, 5, 6]
+    assertEquals (dlist2list (removeAt (list2dlist [1, 2, 3, 4, 5, 6]) 4)) [1, 2, 3, 4, 6]
+    assertEquals (dlist2list (removeAt (list2dlist [1, 2, 3, 4, 5, 6]) 5)) [1, 2, 3, 4, 5]
+
+
 main :: IO ()
 main = do
     putStr "Test 1-1 "
@@ -355,4 +371,7 @@ main = do
     putStrLn "SUCCESS"
     putStr "Test 4-2 "
     test4_2
+    putStrLn "SUCCESS"
+    putStr "Test 5-1 "
+    test5_1
     putStrLn "SUCCESS"

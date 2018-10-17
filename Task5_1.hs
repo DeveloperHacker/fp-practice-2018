@@ -29,11 +29,28 @@ list2dlist' left (h: t) =
     let rec = DCons left h (list2dlist' rec t)
     in rec
 
+dlist2list :: DList a -> [a]
+dlist2list DNil = []
+dlist2list (DCons _ value right) = (value: dlist2list right)
+
 index :: DList a -> Int -> a
-index = todo
+index list i = case list of
+    DNil -> error "IndexOfBoundException"
+    DCons _ v _ | i == 0 -> v
+    DCons _ _ right -> index right $ i - 1
 
 insertAt :: DList a -> Int -> a -> DList a
-insertAt list index value = todo
+insertAt list index value = insertAt' DNil list index value where 
+    insertAt' left DNil 0 value = DCons left value DNil
+    insertAt' left DNil index value = DNil
+    insertAt' left right 0 value = rec where 
+        rec = DCons left value $ insertAt' rec right (-1) value
+    insertAt' left (DCons _ v right) index value = rec where 
+        rec = DCons left v $ insertAt' rec right (index - 1) value
 
 removeAt :: DList a -> Int -> DList a
-removeAt list index = todo
+removeAt list index = removeAt' DNil list index where
+    removeAt' left DNil index = DNil
+    removeAt' left (DCons _ v right) 0 = removeAt' left right (-1)
+    removeAt' left (DCons _ v right) index = rec where 
+        rec = DCons left v $ removeAt' rec right (index - 1)
