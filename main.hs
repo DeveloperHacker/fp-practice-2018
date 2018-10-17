@@ -13,9 +13,13 @@ import Task3_3
 import Task4_1
 import Task4_2
 import Task5_1
+import Task5_2
 
 assertEquals actual expected | actual == expected = putStr ""
 assertEquals actual expected = error $ concat ["expected: ", (show expected), " but was: ", (show actual)]
+
+assertEqualsEps eps actual expected | expected - eps < actual && actual < expected + eps = putStr ""
+assertEqualsEps eps actual expected = error $ concat ["expected: ", (show expected), " ± ", show eps ," but was: ", (show actual)]
 
 assertTrue False = error "assertion failed!"
 assertTrue _     = putStr ""
@@ -342,6 +346,21 @@ test5_1 = do
     assertEquals (dlist2list (removeAt (list2dlist [1, 2, 3, 4, 5, 6]) 4)) [1, 2, 3, 4, 6]
     assertEquals (dlist2list (removeAt (list2dlist [1, 2, 3, 4, 5, 6]) 5)) [1, 2, 3, 4, 5]
 
+test5_2 = do
+    assertEqualsEps 1e-6 (sLookup 11 $ sinPrecisions 0) (sin 0)
+    assertEqualsEps 1e-6 (sLookup 11 $ sinPrecisions pi) (sin pi)
+    assertEqualsEps 1e-6 (sLookup 11 $ sinPrecisions $ 2 * pi) (sin $ 2 * pi)
+    assertEqualsEps 1e-6 (sLookup 11 $ sinPrecisions $ (-100) * pi) (sin $ (-100) * pi)
+    assertEqualsEps 1e-6 (sLookup 11 $ sinPrecisions $ pi / 3) (sin $ pi / 3)
+    assertEqualsEps 1e-6 (sLookup 11 $ sinPrecisions $ pi / 4) (sin $ pi / 4)
+    assertEqualsEps 1e-6 (sLookup 11 $ sinPrecisions $ pi / 6) (sin $ pi / 6)
+    assertEqualsEps 1e-6 (sLookup 11 $ sinPrecisions $ pi / 2) (sin $ pi / 2)
+    assertEqualsEps 1e-3 (fromRational $ sLookup 6 ePrecisions) (exp 1.0)
+    assertEqualsEps 1e-4 (fromRational $ sLookup 7 ePrecisions) (exp 1.0)
+    assertEqualsEps 1e-5 (fromRational $ sLookup 8 ePrecisions) (exp 1.0)
+    assertEqualsEps 1e-6 (fromRational $ sLookup 9 ePrecisions) (exp 1.0)
+    assertEqualsEps 1e-7 (fromRational $ sLookup 10 ePrecisions) (exp 1.0)
+
 
 main :: IO ()
 main = do
@@ -374,4 +393,7 @@ main = do
     putStrLn "SUCCESS"
     putStr "Test 5-1 "
     test5_1
+    putStrLn "SUCCESS"
+    putStr "Test 5-2 "
+    test5_2
     putStrLn "SUCCESS"
