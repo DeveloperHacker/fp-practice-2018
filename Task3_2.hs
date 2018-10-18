@@ -21,10 +21,9 @@ instance (Eq a) => Eq (ReverseList a) where
 
 instance (Ord a) => Ord (ReverseList a) where
     left <= right = case (left, right) of
-        _ | length left < length right -> True 
-        _ | length left > length right  -> False
         (RNil, RNil) -> True
         (RNil, RCons _ _) -> True
+        (RCons _ _, RNil) -> False
         (RCons lt lh, RCons rt rh) | lh == rh -> lt <= rt
         (RCons lt lh, RCons rt rh) | lh < rh -> True
         _ -> False
