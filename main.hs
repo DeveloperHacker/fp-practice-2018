@@ -187,6 +187,7 @@ test2_2 = do
     assertEquals (diagonal [[1, 0, 0], [0, 2, 0], [0, 0, 3]]) [1, 2, 3]
     assertEquals (diagonal [[1, 0, 0], [0, 2, 0], [0, 0, 3], [0, 0, 0]]) [1, 2, 3]
     assertEquals (diagonal [[1, 0, 0, 0], [0, 2, 0, 0], [0, 0, 3, 0]]) [1, 2, 3]
+    assertEquals (diagonal [[1], [0, 2], [0, 0, 3]]) [1, 2, 3]
     assertEquals (map (\(Just e) -> e) $ filterNot (\e -> e == Nothing) [Just 0, Just 1, Nothing, Just 3, Nothing, Just 5]) [0, 1, 3, 5]
     assertTrue $ elem 1 [1, 2, 3, 1, 4, 5]
     assertTrue $ elem 2 [1, 2, 3, 1, 4, 5]

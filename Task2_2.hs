@@ -48,8 +48,9 @@ catMaybes lst = foldr f [] lst where
 
 -- Диагональ матрицы
 diagonal :: [[a]] -> [a]
-diagonal mat = reverse $ foldl f [] mat where 
-    f acc e = if length e <= length acc then acc else (e !! length acc: acc)
+diagonal mat = reverse $ foldl f [] mat where
+    f acc e = if length e <= length' then acc else (e !! length': acc) where
+        length' = length acc
 
 -- Фильтр для всех элементов, не соответствующих предикату
 filterNot :: (a -> Bool) -> [a] -> [a]
