@@ -28,18 +28,28 @@ ltFind tree element = case tree of
     LTNode _ value left _ | value > element -> ltFind left element
 
 ltInsert :: (Ord a, Show a) => a -> LinkedTree a -> LinkedTree a
-ltInsert element tree = insert' LTEmpty tree element where 
+ltInsert element tree = insert' LTEmpty tree element where
+    update parent node = case node of
+        LTEmpty -> LTEmpty
+        LTNode _ value left right -> LTNode parent value left right
     insert' parent tree element = case tree of
         LTEmpty -> LTNode parent element LTEmpty LTEmpty
         LTNode _ value _ _ | value == element -> 
             error $ concat ["Element ", show element, " already exists"]
-        LTNode _ value left right | value < element -> node where 
-            node = LTNode parent value left (insert' node right element)
-        LTNode _ value left right | value > element -> node where 
-            node = LTNode parent value (insert' node left element) right
+        LTNode _ value left right | value < element -> node where
+            left' = update node left 
+            right' = insert' node right element
+            node = LTNode parent value left' right'
+        LTNode _ value left right | value > element -> node where
+            right' = update node right
+            left' = insert' node left element
+            node = LTNode parent value left' right'
 
 ltRemove :: (Ord a, Show a) => LinkedTree a -> a -> LinkedTree a
 ltRemove tree element = remove' LTEmpty tree element where
+    update parent node = case node of
+        LTEmpty -> LTEmpty
+        LTNode _ value left right -> LTNode parent value left right
     remove' parent tree element = case tree of
         LTEmpty -> error $ concat ["Element ", show element, " already exists"]
         LTNode _ value LTEmpty LTEmpty | value == element -> LTEmpty
@@ -48,11 +58,17 @@ ltRemove tree element = remove' LTEmpty tree element where
             value' = min right
             min (LTNode _ value LTEmpty _) = value
             min (LTNode _ _ left _) = min left
-            node = LTNode parent value' left (remove' node right value')
+            left' = update node left
+            right' = remove' node right value'
+            node = LTNode parent value' left' right'
         LTNode _ value left right | value < element -> node where 
-            node = LTNode parent value left (remove' node right element)
+            left' = update node left
+            right' = remove' node right element
+            node = LTNode parent value left' right'
         LTNode _ value left right | value > element -> node where 
-            node = LTNode parent value (remove' node left element) right
+            right' = update node right
+            left' = remove' node left element
+            node = LTNode parent value left' right'
 
 fromLinkedTree :: LinkedTree a -> [a]
 fromLinkedTree tree = case tree of 
