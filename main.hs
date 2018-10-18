@@ -14,6 +14,7 @@ import Task4_1
 import Task4_2
 import Task5_1
 import Task5_2
+import Task6
 
 assertEquals actual expected | actual == expected = putStr ""
 assertEquals actual expected = error $ concat ["expected: ", (show expected), " but was: ", (show actual)]
@@ -362,6 +363,33 @@ test5_2 = do
     assertEqualsEps 1e-7 (fromRational $ sLookup 10 ePrecisions) (exp 1.0)
 
 
+test6_1 = let 
+        tree1 = ltInsert 10 $ 
+                    ltInsert 2 $ 
+                        ltInsert 0 $ 
+                            ltInsert (-1) $ 
+                                ltInsert 4 $ 
+                                    ltInsert 3 $ 
+                                        ltInsert 7 $ 
+                                            ltInsert 1 $ 
+                                                ltInsert 8 ltEmpty
+        tree2 = ltRemove tree1 3
+        list1 = [-1, 0, 1, 2, 3, 4, 7, 8, 10]
+        list2 = [-1, 0, 1, 2, 4, 7, 8, 10]
+    in do
+        assertEquals (ltEmpty :: (LinkedTree Integer)) LTEmpty
+        assertEquals (fromLinkedTree tree1) list1
+        assertEquals (fromLinkedTree tree2) list2
+        assertTrue $ ltFind tree1 2
+        assertTrue $ ltFind tree1 3
+        assertTrue $ ltFind tree1 4
+        assertTrue $ ltFind tree1 (-1)
+        assertTrue $ ltFind tree2 2
+        assertTrue $ not $ ltFind tree2 3
+        assertTrue $ ltFind tree2 4
+        assertTrue $ ltFind tree2 (-1)
+
+
 main :: IO ()
 main = do
     putStr "Test 1-1 "
@@ -396,4 +424,7 @@ main = do
     putStrLn "SUCCESS"
     putStr "Test 5-2 "
     test5_2
+    putStrLn "SUCCESS"
+    putStr "Test 6-1 "
+    test6_1
     putStrLn "SUCCESS"

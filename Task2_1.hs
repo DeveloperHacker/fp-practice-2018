@@ -43,10 +43,10 @@ remove k t = case (t) of
     TreeMapNode _ key _ left EmptyTreeMap | key == k -> left
     TreeMapNode size key _ left right | key == k -> let 
             min t = case (t) of 
-                TreeMapNode _ key _ EmptyTreeMap EmptyTreeMap -> key
-                TreeMapNode _ key _ left _ -> min left
-            key = min right
-        in TreeMapNode (size - 1) key (lookup key right) left (remove key right)
+                TreeMapNode _ key _ EmptyTreeMap _ -> key
+                TreeMapNode _ _ _ left _ -> min left
+            key' = min right
+        in TreeMapNode (size - 1) key' (lookup key' right) left (remove key' right)
     TreeMapNode size key value left right | key < k -> TreeMapNode (size - 1) key value left (remove k right)
     TreeMapNode size key value left right | key > k -> TreeMapNode (size - 1) key value (remove k left) right
 
