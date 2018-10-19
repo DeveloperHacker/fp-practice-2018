@@ -1,6 +1,6 @@
 module Main where
 
-import Prelude hiding (sin, cos, gcd, lookup, foldl, foldr, unfoldr, map, concatMap, 
+import Prelude hiding (sin, cos, gcd, lookup, foldl, foldr, unfoldr, map, concatMap,
     filter, maxBy, minBy, reverse, sum, product, elem)
 import Task1_1 (Term(IntConstant, Variable))
 import Task1_1 (Term, (|+|), (|-|), (|*|), replaceVar, evaluate)
@@ -25,25 +25,25 @@ assertEqualsEps eps actual expected = error $ concat ["expected: ", (show expect
 assertTrue False = error "assertion failed!"
 assertTrue _     = putStr ""
 
-test1_1 = 
-    let 
+test1_1 =
+    let
         expr1 = Variable "a" |+| Variable "b" |*| Variable "c"
         expr2 = Variable "a" |-| Variable "b" |-| Variable "c"
         expr3 = Variable "a" |-| Variable "b" |*| IntConstant 10 |-| Variable "c"
         expr4 = expr1 |*| expr2 |+| expr3
-        value1 = replaceVar "a" (IntConstant 2) $ 
-                    replaceVar "b" (IntConstant 3) $ 
+        value1 = replaceVar "a" (IntConstant 2) $
+                    replaceVar "b" (IntConstant 3) $
                         replaceVar "c" (IntConstant 4) expr1
-        value2 = replaceVar "a" (IntConstant 2) $ 
+        value2 = replaceVar "a" (IntConstant 2) $
                         replaceVar "c" (IntConstant 0) expr1
-        value3 = replaceVar "a" (IntConstant 2) $ 
-                    replaceVar "b" (IntConstant 3) $ 
+        value3 = replaceVar "a" (IntConstant 2) $
+                    replaceVar "b" (IntConstant 3) $
                         replaceVar "c" (IntConstant 4) expr2
-        value4 = replaceVar "a" (IntConstant 2) $ 
-                    replaceVar "b" (IntConstant 3) $ 
+        value4 = replaceVar "a" (IntConstant 2) $
+                    replaceVar "b" (IntConstant 3) $
                         replaceVar "c" (IntConstant 4) expr3
-        value5 = replaceVar "a" (IntConstant 2) $ 
-                    replaceVar "b" (IntConstant 3) $ 
+        value5 = replaceVar "a" (IntConstant 2) $
+                    replaceVar "b" (IntConstant 3) $
                         replaceVar "c" (IntConstant 4) expr4
     in
     do
@@ -97,14 +97,14 @@ test1_2 = do
 
 
 test2_1 = let
-        tree1 = insert (10, 9) $ 
-                    insert (2, 8) $ 
-                        insert (0, 7) $ 
-                            insert (-1, 6) $ 
-                                insert (4, 5) $ 
-                                    insert (3, 4) $ 
-                                        insert (7, 3) $ 
-                                            insert (1, 2) $ 
+        tree1 = insert (10, 9) $
+                    insert (2, 8) $
+                        insert (0, 7) $
+                            insert (-1, 6) $
+                                insert (4, 5) $
+                                    insert (3, 4) $
+                                        insert (7, 3) $
+                                            insert (1, 2) $
                                                 insert (8, 1) emptyTree
         tree1m = TreeMapNode 9 8 1 (
                     TreeMapNode 7 1 2 (
@@ -210,8 +210,8 @@ test2_2 = do
     assertEquals (groups [] 1) ([[]] :: [[Integer]])
     assertEquals (groups [1, 2, 3, 4, 5] 0) [[], [1, 2, 3, 4, 5]] -- wtf?
     assertEquals (groups [1, 2, 3, 4, 5] (-1)) [[1, 2, 3, 4, 5]] -- yet wtf?
-    
-test3_1 = let 
+
+test3_1 = let
         number1 = Pred $ Succ $ Succ $ Pred $ Pred $ Succ $ Succ $ Zero
     in do
         assertEquals number1 (Succ Zero)
@@ -244,7 +244,7 @@ test3_1 = let
         assertEquals (fromInteger 5 `quotRem` fromInteger 5) (fromInteger 1 :: WeirdPeanoNumber, fromInteger 0 :: WeirdPeanoNumber)
         assertEquals (fromInteger (-20) `divMod` fromInteger 3) (fromInteger (-7) :: WeirdPeanoNumber, fromInteger 1 :: WeirdPeanoNumber)
 
-test3_2 = let 
+test3_2 = let
         list = RCons (RCons (RCons (RCons (RCons RNil 1) 2) 3) 4) 5
     in do
         assertEquals (show list) "RCons (RCons (RCons (RCons (RCons (RNil) 1) 2) 3) 4) 5"
@@ -314,7 +314,7 @@ test3_3 = let
         assertEquals (map (intersectionContains $ mmap (plus 3) intersectionSet1) list) [False, False, False, False, True, True, True, False]
         assertEquals (map (plusContains $ mmap (plus 3) plusSet1) list) [False, False, False, False, True, True, True, False]
 
-test4_1 = let 
+test4_1 = let
         plus x y = do
             x' <- x
             y' <- y
@@ -323,7 +323,7 @@ test4_1 = let
         assertEquals (fun ((FunMonad length) `plus` (FunMonad ((+) 1 . length))) "hello") 11
         assertEquals (fun ((FunMonad length) `plus` (FunMonad ((+) 1 . length))) "world!") 13
 
-test4_2 = let 
+test4_2 = let
         plus x y = do
             x' <- x
             y' <- y
@@ -331,7 +331,7 @@ test4_2 = let
         quadruple1 = FourOf 1 2 3 4
         quadruple2 = FourOf 4 6 7 8
         quadruple3 = FourOf 5 8 10 12
-    in do 
+    in do
         assertEquals (quadruple1 `plus` quadruple2) quadruple3
 
 
@@ -364,32 +364,69 @@ test5_2 = do
     assertEqualsEps 1e-7 (fromRational $ sLookup 10 ePrecisions) (exp 1.0)
 
 
-test6_1 = let 
-        tree1 = ltInsert 10 $ 
-                    ltInsert 2 $ 
-                        ltInsert 0 $ 
-                            ltInsert (-1) $ 
-                                ltInsert 4 $ 
-                                    ltInsert 3 $ 
-                                        ltInsert 7 $ 
-                                            ltInsert 1 $ 
+test6_1 = let
+        tree1 = ltInsert 10 $
+                    ltInsert 2 $
+                        ltInsert 0 $
+                            ltInsert (-1) $
+                                ltInsert 4 $
+                                    ltInsert 3 $
+                                        ltInsert 7 $
+                                            ltInsert 1 $
                                                 ltInsert 8 ltEmpty
         tree2 = ltRemove tree1 3
+        tree3 = ltRemove tree1 8
         list1 = [-1, 0, 1, 2, 3, 4, 7, 8, 10]
         list2 = [-1, 0, 1, 2, 4, 7, 8, 10]
+
+        testTopDown tree = let
+                setFst val (_, snd) = (val, snd)
+                applySnd foo (fst, snd) = (fst, foo snd)
+                parent (LTNode parent' _ _ _) = parent'
+                value (LTNode _ value' _ _) = value'
+                walk tree = let
+                        walkSubTree tree child = [(tree, parent child)] ++ 
+                            (setFst tree <$> applySnd parent <$> cache) where 
+                                cache = walk child
+                    in case tree of
+                        LTEmpty -> []
+                        LTNode _ _ LTEmpty LTEmpty -> []
+                        LTNode _ _ left LTEmpty -> walkSubTree tree left
+                        LTNode _ _ LTEmpty right -> walkSubTree tree right
+                        LTNode _ _ left right -> walkSubTree tree left ++ walkSubTree tree right
+                subTest tree = case tree of 
+                    LTEmpty -> putStr ""
+                    LTNode _ _ left right -> do
+                        testTopDown left
+                        testTopDown right
+            in do
+                foldl (>>) mempty $ (\(from, to) -> assertEquals to from) <$> walk tree
+                subTest tree
     in do
         assertEquals (ltEmpty :: (LinkedTree Integer)) LTEmpty
         assertEquals (fromLinkedTree tree1) list1
         assertEquals (fromLinkedTree tree2) list2
+        assertTrue $ ltFind tree1 8
+        assertTrue $ ltFind tree1 10
         assertTrue $ ltFind tree1 2
         assertTrue $ ltFind tree1 3
         assertTrue $ ltFind tree1 4
         assertTrue $ ltFind tree1 (-1)
+        assertTrue $ ltFind tree2 8
+        assertTrue $ ltFind tree2 10
         assertTrue $ ltFind tree2 2
         assertTrue $ not $ ltFind tree2 3
         assertTrue $ ltFind tree2 4
         assertTrue $ ltFind tree2 (-1)
-
+        assertTrue $ not $ ltFind tree3 8
+        assertTrue $ ltFind tree3 10
+        assertTrue $ ltFind tree3 2
+        assertTrue $ ltFind tree3 3
+        assertTrue $ ltFind tree3 4
+        assertTrue $ ltFind tree3 (-1)
+        testTopDown tree1
+        testTopDown tree1
+        testTopDown tree3
 
 main :: IO ()
 main = do
