@@ -48,9 +48,9 @@ catMaybes lst = foldr f [] lst where
 
 -- Диагональ матрицы
 diagonal :: [[a]] -> [a]
-diagonal mat = reverse $ foldl f [] mat where
-    f acc e = if length e <= length' then acc else (e !! length': acc) where
-        length' = length acc
+diagonal mat = reverse $ second $ foldl f (0, []) mat where
+    f (length', acc) e = if length e <= length' then (length' + 1, acc) else (length' + 1, e !! length': acc)
+    second (_, second') = second'
 
 -- Фильтр для всех элементов, не соответствующих предикату
 filterNot :: (a -> Bool) -> [a] -> [a]
@@ -75,7 +75,7 @@ append left right = foldr (\e acc -> (e: acc)) right left
 -- Разбиение списка lst на куски размером n
 -- (последний кусок может быть меньше)
 groups :: [a] -> Integer -> [[a]]
-groups lst n = map (\e -> reverse e) $ catMaybes $ unfoldr f (0, [], lst) where 
+groups lst n = map reverse $ catMaybes $ unfoldr f (0, [], lst) where 
     f (cnt, hs, lst) = case lst of
         _ | cnt == -1 -> Nothing
         [] -> Just (Just hs, (-1, [], []))
